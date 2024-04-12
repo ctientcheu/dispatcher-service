@@ -10,7 +10,19 @@ spring:
     username: user
     password: password
     connection-timeout: 5s
+  config:
+    import: "optional:configserver:"
   cloud:
+    config:
+      uri: http://localhost:9002
+      request-read-timeout: 5000
+      request-connect-timeout: 5000
+      fail-fast: false
+      retry:
+        max-attempts: 6
+        initial-interval: 1000
+        max-interval: 5000
+        multiplier: 1.2
     function:
       definition: pack|label
     stream:
