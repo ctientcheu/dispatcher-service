@@ -5,6 +5,4 @@ package com.polarbookshop.dispatcherservice;
  * @project dispatcher-service
  * @org Cerebrau
  */
-public record OrderDispatchedMessage(
-    Long orderId
-) {}
+public record OrderDispatchedMessage(Long orderId) {}

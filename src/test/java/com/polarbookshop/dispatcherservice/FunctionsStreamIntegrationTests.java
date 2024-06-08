@@ -1,6 +1,9 @@
 package com.polarbookshop.dispatcherservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 
-import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * @author clement.tientcheu@cerebrau.com
  * @project dispatcher-service
@@ -24,22 +23,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(TestChannelBinderConfiguration.class)
 public class FunctionsStreamIntegrationTests {
 
-    @Autowired
-    private InputDestination input;
-    @Autowired
-    private OutputDestination output;
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private InputDestination input;
+  @Autowired private OutputDestination output;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    void whenOrderAccepted_thenDispatched() throws IOException {
-        long orderId = 121L;
-        Message<OrderAcceptedMessage> inputMessage = MessageBuilder.withPayload(new OrderAcceptedMessage(orderId)).build();
-        Message<OrderDispatchedMessage> expectedOutputMessage = MessageBuilder.withPayload(new OrderDispatchedMessage(orderId)).build();
-        this.input.send(inputMessage);
+  @Test
+  void whenOrderAccepted_thenDispatched() throws IOException {
+    long orderId = 121L;
+    Message<OrderAcceptedMessage> inputMessage =
+        MessageBuilder.withPayload(new OrderAcceptedMessage(orderId)).build();
+    Message<OrderDispatchedMessage> expectedOutputMessage =
+        MessageBuilder.withPayload(new OrderDispatchedMessage(orderId)).build();
+    this.input.send(inputMessage);
 
-        assertThat(objectMapper.readValue(output.receive().getPayload(), OrderDispatchedMessage.class)).isEqualTo(
-            expectedOutputMessage.getPayload()
-        );
-    }
+    assertThat(objectMapper.readValue(output.receive().getPayload(), OrderDispatchedMessage.class))
+        .isEqualTo(expectedOutputMessage.getPayload());
+  }
 }
